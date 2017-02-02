@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+	<head>
+		<script src="js/dom.js"></script>
+		<script>
+			var materials = {
+				"cloth": {
+					"metal": false,
+					"forWeapons": false,
+					"armorModifier": 0,
+					"modifier": 0
+				},
+				"leather": {
+					"metal": false,
+					"forWeapons": false,
+					"armorModifier": 1,
+					"modifier": 0
+				},
+				"stone": {
+					"metal": false,
+					"forWeapons": true,
+					"armorModifier": 2,
+					"modifier": -2
+				},
+				"copper": {
+					"metal": true,
+					"forWeapons": true,
+					"armorModifier": 3,
+					"modifier": -1
+				},
+				"bronze": {
+					"metal": true,
+					"forWeapons": true,
+					"armorModifier": 4,
+					"modifier": 0
+				},
+				"silver": {
+					"metal": true,
+					"forWeapons": true,
+					"armorModifier": 4,
+					"modifier": 0
+				},
+				"gold": {
+					"metal": true,
+					"forWeapons": true,
+					"armorModifier": 3,
+					"modifier": 0
+				},
+				"iron": {
+					"metal": true,
+					"forWeapons": true,
+					"armorModifier": 5,
+					"modifier": +1
+				},
+				"steel": {
+					"metal": true,
+					"forWeapons": true,
+					"armorModifier": 7,
+					"modifier": +2
+				}
+			};
+
+			var items = {
+				"dagger": {
+					"damage": "1d4",
+					"ranged": false,
+					"range": 0
+				},
+				"throwing knife": {
+					"damage": "1d4",
+					"ranged": false,
+					"range": 10
+				},
+				"short sword": {
+					"damage": "1d6",
+					"ranged": false,
+					"range": 1
+				},
+				"long sword": {
+					"damage": "1d6 + 1",
+					"ranged": false,
+					"range": 1
+				},
+				"claymore": {
+					"damage": "1d8",
+					"ranged": false,
+					"range": 2
+				},
+				"hand axe": {
+					"damage": "1d4",
+					"ranged": false,
+					"range": 1
+				},
+				"bearded axe": {
+					"damage": "1d6",
+					"ranged": false,
+					"range": 10
+				},
+				"battle axe": {
+					"damage": "1d8",
+					"ranged": false,
+					"range": 10
+				},
+				"short spear": {
+					"damage": "1d6",
+					"ranged": false,
+					"range": 2
+				},
+				"spear": {
+					"damage": "1d8",
+					"ranged": false,
+					"range": 3
+				},
+				"halberd": {
+					"damage": "1d6",
+					"ranged": false,
+					"range": 10
+				},
+				"short bow": {
+					"damage": "1d4",
+					"ranged": true,
+					"range": 20
+				},
+				"recurve bow": {
+					"damage": "1d6",
+					"ranged": true,
+					"range": 30
+				},
+				"long bow": {
+					"damage": "1d6",
+					"ranged": true,
+					"range": 50
+				}
+			};
+
+			var armors = {
+				"cowl": {
+					"armor": 1
+				},
+				"skull cap": {
+					"armor": 3
+				},
+				"pauldrens": {
+					"armor": 2
+				},
+				"chest armor": {
+					"armor": 2
+				},
+				"boots": {
+					"armor": 1
+				},
+				"gloves": {
+					"armor": 1
+				},
+				"buckler": {
+					"armor": 1
+				},
+				"tower shield": {
+					"armor": 3
+				},
+				"breastplate": {
+					"armor": 3
+				},
+				"chain mail": {
+					"armor": 3
+				},
+				"scale mail": {
+					"armor": 4
+				}
+			};
+
+			window.onload = function()
+			{
+				var t = DOM.create("table");
+				var thead = t.create("tr");
+				var c1 = thead.create("th");
+				c1.innerHTML = "Item";
+				var c2 = thead.create("th");
+				c2.innerHTML = "Damage";
+				var c3 = thead.create("th");
+				c3.innerHTML = "Range";
+				thead.append(c1);
+				thead.append(c2);
+				thead.append(c3);
+				t.append(thead);
+
+				var itemCount = 0;
+
+				for(var key in materials)
+				{
+					var value = materials[key];
+					if (value.forWeapons)
+					{
+						for(var itemKey in items)
+						{
+							var itemVal = items[itemKey];
+
+							if (itemVal.ranged && !value.metal)
+							{
+								continue;
+							}
+							var row = t.create("tr");
+
+							var nameCell = row.create("td");
+							nameCell.innerHTML = key + " " + itemKey;
+
+							var damageCell = row.create("td");
+							damageCell.innerHTML = itemVal.damage + " " + (value.modifier > 0 ? "+ " + value.modifier : value.modifier < 0 ? "- " + Math.abs(value.modifier) : "");
+
+							var rangeCell = row.create("td");
+							rangeCell.innerHTML = itemVal.range;
+
+							row.append(nameCell);
+							row.append(damageCell);
+							row.append(rangeCell);
+							t.append(row);
+							itemCount++;
+						}
+					}
+
+					for(var itemKey in armors)
+					{
+						var itemVal = armors[itemKey];
+		                if(!itemVal) 
+		                {
+							continue;
+		                }
+
+						var row = t.create("tr");
+
+						var nameCell = row.create("td");
+						nameCell.innerHTML = key + " " + itemKey;
+
+						var armorCell = row.create("td");
+						armorCell.innerHTML = itemVal.armor + value.armorModifier;
+
+						row.append(nameCell);
+						row.append(armorCell);
+						t.append(row);
+						itemCount++;
+					}
+				}
+				document.body.append(t);
+				console.log(itemCount);
+			};
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
